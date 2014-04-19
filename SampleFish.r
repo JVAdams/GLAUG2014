@@ -2,11 +2,11 @@
 ###                                        artiFISHal                                        ###
 ### U.S. Geological Survey (USGS) Computer Program "artiFISHal" version 2014-04              ###
 ### Written by Jean V. Adams, USGS - Great Lakes Science Center, Ann Arbor, Michigan, USA    ###
-### Use of this program was first described by Jean V. Adams in a publication by             ###
-###      Yule et al. (2013) in the Canadian Journal of Fisheries and Aquatic Sciences        ###
+### Use of this program was first described in a publication by Yule et al. (2013)           ###
+###      in the Canadian Journal of Fisheries and Aquatic Sciences                           ###
 ### Written in programming language R (R Core Team, 2013, www.R-project.org),                ###
-###      version 3.0.1 (2013-05-16)                                                          ###
-### Run on a PC with Intel(R) Core(TM)2 Duo CPU P8600 @ 2.40 GHz processor, 8.00 GB RAM,     ###
+###      version 3.1.0 (2014-04-10)                                                          ###
+### Run on a PC with Intel(R) Core(TM) I7-4600m CPU @ 2.90 GHz processor, 16.0 GB RAM,       ###
 ###      and Microsoft Windows 7 Enterprise operating system 2009 Service Pack 1             ###
 ### Source code is available from Jean V. Adams, jvadams@usgs.gov                            ###
 ################################################################################################
@@ -58,7 +58,7 @@ min.no.fish.per.haul <- 2
 ############################  data crunching  ############################
 ##########################################################################
 
-# load the MASS and class packages
+# load the MASS and XLConnect packages
 if(!require(MASS)) stop("R package MASS is required")
 if(!require(XLConnect)) stop("R package XLConnect is required")
 
@@ -75,11 +75,11 @@ runrow <- sampinput$run.id==sel.run
 sel.lk <- sampinput$LC[runrow]
 
 # inputs from simulation program
-load(file=paste(subdir, "\\inputs-lake", sel.lk, ".Rdata", sep=""))
+load(file=paste(subdir, "/inputs-lake", sel.lk, ".Rdata", sep=""))
 
 # clear all graphics windows
 graphics.off()
-if(save.plots) pdf(paste(subdir, "\\Survey-lake", sel.lk, "-run", sel.run, ".pdf", sep=""), width=9, height=6.5, 
+if(save.plots) pdf(paste(subdir, "/Survey-lake", sel.lk, "-run", sel.run, ".pdf", sep=""), width=9, height=6.5, 
 	title="Survey", paper="USr")
 
 # function to recode values
@@ -180,7 +180,7 @@ AC <- data.frame(matrix(NA, nrow=0, ncol=13, dimnames=list(NULL, c("Event", "ACi
 cushion <- botdepr[2]*tan(half.cone.rad)
 
 # simulated population (fish)
-load(file=paste(subdir, "\\fish-lake", sel.lk, ".Rdata", sep=""))
+load(file=paste(subdir, "/fish-lake", sel.lk, ".Rdata", sep=""))
 
 # create a single row of missing values that looks just like the "fish" data frame
 # this will be used to maintain a row of information on an acoustic transect, even if it captures no targets
@@ -346,22 +346,22 @@ mtr.out.vars <- c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRd2sh", 
 #### only save *1* sampling event, if that is what was originally specified ###
 if(nS.orig==1) {
 	write.csv(AC[AC$Event==1, ac.out.vars], 
-		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(ACsmryIL[ACsmryIL$Event==1, acsumil.out.vars], 
-		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(ACsmryI[ACsmryI$Event==1, acsumi.out.vars], 
-		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(MTR[MTR$Event==1, mtr.out.vars], 
-		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	} else {
 	write.csv(AC[, ac.out.vars], 
-		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(ACsmryIL[, acsumil.out.vars], 
-		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(ACsmryI[, acsumi.out.vars], 
-		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	write.csv(MTR[, mtr.out.vars], 
-		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="\\"), row.names=FALSE)
+		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
 	}
 rm(ac.out.vars, acsumil.out.vars, acsumi.out.vars, mtr.out.vars)
 
