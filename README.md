@@ -8,8 +8,8 @@ artiFISHal is a pelagic fish community simulator developed using the R programmi
 ## To use artiFISHal, follow the steps outlined below.
 
 1. Download three files from this repository:
-..* Inputs.xls
-..* SimulateFish.r
+* Inputs.xls
+.* SimulateFish.r
 ..* SampleFish.r
 
 1. Edit the three worksheets in the Excel workbook, Inputs.xls.
