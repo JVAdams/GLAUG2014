@@ -28,7 +28,7 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
  * `cap.no.fish` - set the maximum number of fish
  * `save.plots` - specify whether to save plots to a pdf or show them on the screen
 
-1. Run the R script `SimulateFish.r`, which will create four output files, one comma delimited data file, one pdf document, and two Rdata files
+1. Run the R script `SimulateFish.r`, which will create four output files (one comma delimited data file, one pdf document, and two Rdata files)
  * `Truth-lake#.csv` - number and biomass of true population of fish in lake
  * `Diagnostic-lake#.pdf` - diagnostic plots of fish population
  * `inputs-lake#.Rdata` - collection of R objects
@@ -41,7 +41,7 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
  * `save.plots` - specify whether to save plots to a pdf or show them on the screen
  * `min.no.fish.per.haul` - set the minimum number of fish required for a valid trawl sample
 
-1. Run the R script `SampleFish.r`, which will create five output files, four comma delimited data files and one pdf document
+1. Run the R script `SampleFish.r`, which will create five output files (four comma delimited data files and one pdf document)
  * `ACTargets-lake#-run#.csv` - individual acoustic targets
  * `ACSummaryI-lake#-run#.csv` - summary of acoustic targets by interval (I)
  * `ACSummaryIL-lake#-run#.csv` - summary of acoustic targets by interval (I) and layer (L)
