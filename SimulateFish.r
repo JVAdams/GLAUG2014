@@ -2,14 +2,15 @@
 ###                                        artiFISHal                                        ###
 ### U.S. Geological Survey (USGS) Computer Program "artiFISHal" version 2014-04              ###
 ### Written by Jean V. Adams, USGS - Great Lakes Science Center, Ann Arbor, Michigan, USA    ###
-### Use of this program was first described by Jean V. Adams in a publication by             ###
-###      Yule et al. (2013) in the Canadian Journal of Fisheries and Aquatic Sciences        ###
+### Use of this program was first described in a publication by Yule et al. (2013)           ###
+###      in the Canadian Journal of Fisheries and Aquatic Sciences                           ###
 ### Written in programming language R (R Core Team, 2013, www.R-project.org),                ###
-###      version 3.0.1 (2013-05-16)                                                          ###
-### Run on a PC with Intel(R) Core(TM)2 Duo CPU P8600 @ 2.40 GHz processor, 8.00 GB RAM,     ###
+###      version 3.1.0 (2014-04-10)                                                          ###
+### Run on a PC with Intel(R) Core(TM) I7-4600m CPU @ 2.90 GHz processor, 16.0 GB RAM,       ###
 ###      and Microsoft Windows 7 Enterprise operating system 2009 Service Pack 1             ###
 ### Source code is available from Jean V. Adams, jvadams@usgs.gov                            ###
 ################################################################################################
+
 
 ################################################################################################
 ###                                        artiFISHal                                        ###
