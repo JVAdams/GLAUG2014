@@ -3,26 +3,26 @@ artiFISHal
 
 artiFISHal is a pelagic fish community simulator developed using the R programming language. It can be used to create artificial lakes and populate them with known numbers of fish (identified in species-size groups) to mimic pelagic fish communities. artiFISHal can then be used to sample these fish with virtual acoustic and midwater trawl surveys. Yule et al. (2013) used artiFISHal to evaluate several different approaches for estimating the biomass of pelagic fish species in the Great Lakes.
 
-# Instructions 
+## Instructions 
 
-## To use artiFISHal, follow the steps outlined below.
+#### To use artiFISHal, follow the steps outlined below.
 
 1. Download three files from this repository:
  * Inputs.xls
-  * SimulateFish.r
+ * SimulateFish.r
  * SampleFish.r
 
 1. Edit the three worksheets in the Excel workbook, Inputs.xls.
-..* SimLake -- edit the inputs for the shape of the artificial lake you wish to create
-..* SimFish -- edit the inputs for the fish population you wish to create
-..* Sample -- edit the inputs for the acoustic and midwater trawl survey
+ 1. SimLake -- edit the inputs for the shape of the artificial lake you wish to create
+ 1. SimFish -- edit the inputs for the fish population you wish to create
+ 1. Sample -- edit the inputs for the acoustic and midwater trawl survey
 
 1. Edit the inputs in the R script SimulateFish.r
-..* dir -- directory for reading input data (location of Inputs.xls)
-..* subdir -- directory for saving output data
-..* sel.lk -- the lake you wish to create (LC in Inputs.xls tab SimFish)
-..* cap.no.fish -- set the maximum number of fish
-..* save.plots -- specify whether to save plots to a pdf or show them on the screen
+ * dir -- directory for reading input data (location of Inputs.xls)
+ * subdir -- directory for saving output data
+ * sel.lk -- the lake you wish to create (LC in Inputs.xls tab SimFish)
+ * cap.no.fish -- set the maximum number of fish
+ * save.plots -- specify whether to save plots to a pdf or show them on the screen
 
 1. Run the R script SimulateFish.r, which will create four output files, one comma delimited data file, one pdf document, and two Rdata files
 ..* Truth-lake#.csv -- number and biomass of true population of fish in lake
