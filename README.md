@@ -16,6 +16,8 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
  * `SimulateFish.r`
  * `SampleFish.r`
 
+1. Add a folder to the same directory where `Inputs.xls` for storing the output files
+
 1. Edit the three worksheets in the Excel workbook, `Inputs.xls`.
  * `SimLake` - edit the inputs for the shape of the artificial lake you wish to create
  * `SimFish` - edit the inputs for the fish population you wish to create
@@ -27,6 +29,13 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
  * `sel.lk` - the lake you wish to create (`LC` in `Inputs.xls` tab `SimFish`)
  * `cap.no.fish` - set the maximum number of fish
  * `save.plots` - specify whether to save plots to a pdf or show them on the screen
+
+1. Download the latest version of [R](http://www.r-project.org/)
+ * Install these packages:
+  * XLConnect
+   * In order for XLConnect to work in R for Windows 64-bit, you must have Java installed for Windows 64-bit 
+  * class
+  * MASS
 
 1. Run the R script `SimulateFish.r`, which will create four output files (one comma delimited data file, one pdf document, and two Rdata files)
  * `Truth-lake#.csv` - number and biomass of true population of fish in lake
