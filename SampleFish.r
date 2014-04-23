@@ -350,7 +350,9 @@ ACsmryI <- ACsmryI[order(ACsmryI$Event, ACsmryI$ACid, ACsmryI$interval), ]
 ac.out.vars <- c("Event", "ACid", "interval", "layer", "f.east", "f.north", "f.d2sh", "f.botdep", "f.fdep", "f.d2bot", "ts", "rng.wt")
 acsumil.out.vars <- c("Event", "ACid", "interval", "layer", "east", "north", "d2sh", "botdep", "fdep", "d2bot", "nperha")
 acsumi.out.vars <- c("Event", "ACid", "interval", "east", "north", "d2sh", "botdep", "nperha")
-mtr.out.vars <- c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRd2sh", "MTRbdep", "MTRfdep", "MTRd2bot", "sp", "len", "wt")
+mtr.out.vars <- c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRd2sh", "MTRbdep", "MTRfdep", "MTRd2bot", "sp", "len", "wt", 
+	"f.fdep", "f.d2bot")
+# vars NOT kept from MTR ... "MTRgrp", "f.east", "f.north", "f.d2sh", "f.botdep", "ts"
 
 #### only save *1* sampling event, if that is what was originally specified ###
 if(nS.orig==1) {
