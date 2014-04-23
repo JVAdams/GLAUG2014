@@ -32,7 +32,7 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
 
 1. Download the latest version of [R](http://www.r-project.org/)
  * Install these packages:
-  * `XLConnect` - *note that in order for `XLConnect` to work in R for Windows 64-bit, you must have Java installed for Windows 64-bit*
+  * `XLConnect` - *note that in order for* `XLConnect` *to work in R for Windows 64-bit, you must have Java installed for Windows 64-bit*
   * `class`
   * `MASS`
 
