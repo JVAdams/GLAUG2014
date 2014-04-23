@@ -268,13 +268,16 @@ detach(sampinfo)
 
 
 # categorize targets interval (along transect) and layer (in water column), both in m
-int. <- cut(AC$f.east, include.lowest=TRUE, breaks=seq(eastr[1], eastr[2]+interval.-1, interval.))
-AC$interval <- as.numeric(int.)
-AC$east <- sapply(strsplit(gsub("\\(|\\)|\\[|\\]", "", as.character(int.)), ","), function(x) mean(as.numeric(x)))
-lay. <- cut(AC$f.fdep, include.lowest=TRUE, breaks=seq(0, botdepr[2]+layer.-1, layer.))
-AC$layer <- as.numeric(lay.)
-AC$fdep <- sapply(strsplit(gsub("\\(|\\)|\\[|\\]", "", as.character(lay.)), ","), function(x) mean(as.numeric(x)))
-rm(int., lay.)
+
+int.breaks <- seq(eastr[1], eastr[2]+interval.-1, interval.)
+int.mids <- int.breaks[-1] - diff(int.breaks)/2
+AC$interval <- cut(AC$f.east, include.lowest=TRUE, breaks=int.breaks, labels=FALSE)
+AC$east <- int.mids[AC$interval]
+
+lay.breaks <- seq(0, botdepr[2]+layer.-1, layer.)
+lay.mids <- lay.breaks[-1] - diff(lay.breaks)/2
+AC$layer <- cut(AC$f.fdep, include.lowest=TRUE, breaks=lay.breaks, labels=FALSE)
+AC$fdep <- lay.mids[AC$layer]
 
 
 
@@ -282,26 +285,31 @@ rm(int., lay.)
 # this will be used to ensure that interval-by-layers with no fish are included in later summaries
 
 # each AC transect is the same length, so each will have all of the possible intervals
-all.ints <- seq(from=length(seq(eastr[1], eastr[2]+interval.-1, interval.))-1)
+all.ints <- seq(from=length(int.mids))
 
 # each AC transect goes over the same depth profile, so we can determine the max depth for each interval
 # then see whether the max layer included
 
 easts <- seq(eastr[1], eastr[2], length=1000)
 depth.contour <- zfromx(x=easts, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
-depth.cont.int <- as.numeric(cut(easts, include.lowest=TRUE, breaks=seq(eastr[1], eastr[2]+interval.-1, interval.)))
+depth.cont.int <- as.numeric(cut(easts, include.lowest=TRUE, breaks=int.breaks))
 all.maxes <- tapply(depth.contour, depth.cont.int, max)
 
-max.lays <- as.numeric(cut(all.maxes, include.lowest=TRUE, breaks=seq(0, botdepr[2]+layer.-1, layer.)))
+max.lays <- as.numeric(cut(all.maxes, include.lowest=TRUE, breaks=lay.breaks))
 
 # full matrix of all ACids, all intervals, and all layers
 full.mat <- expand.grid(layer=1:max(max.lays), interval=all.ints, ACid=ACsampinfo$ACid)
-full.mat <- merge(full.mat, ACsampinfo[, c("ACid", "Event")])
+full.mat <- merge(full.mat, ACsampinfo[, c("ACid", "Event", "ACnorth")])
 
 sub.mat <- merge(data.frame(interval=all.ints, max.layer=max.lays), full.mat, all=TRUE)
-sub.mat <- sub.mat[sub.mat$layer <= (sub.mat$max.layer + 0.5), c("Event", "ACid", "interval", "layer")]
+sub.mat <- sub.mat[sub.mat$layer <= (sub.mat$max.layer + 0.5), c("Event", "ACid", "ACnorth", "interval", "layer")]
+sub.mat$east <- int.mids[sub.mat$interval]
+sub.mat$fdep <- lay.mids[sub.mat$layer]
+old.n <- c("ACnorth")
+new.n <- c("north")
+names(sub.mat)[match(old.n, names(sub.mat))] <- new.n
 
-rm(all.ints, easts, depth.contour, depth.cont.int, all.maxes, max.lays, full.mat)
+rm(easts, depth.contour, depth.cont.int, all.maxes, max.lays, full.mat) #all.ints
 
 
 
@@ -324,12 +332,13 @@ names(ACsmryIL)[match(old.n, names(ACsmryIL))] <- new.n
 ACsmryIL$nperha <- 10000 * ACsmryIL$sum.rw/interval.
 rm(old.n, new.n)
 
+ACsmryIL <- merge(ACsmryIL, sub.mat, all=TRUE)
+ACsmryIL$nperha[is.na(ACsmryIL$nperha)] <- 0
+ACsmryIL$sum.rw[is.na(ACsmryIL$sum.rw)] <- 0
+
 ACsmryIL$botdep <- zfromx(x=ACsmryIL$east, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
 ACsmryIL$d2bot <- ACsmryIL$botdep - ACsmryIL$fdep
 ACsmryIL$d2sh <- dfromx(x=ACsmryIL$east, d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
-
-ACsmryIL <- merge(ACsmryIL, sub.mat, all=TRUE)
-ACsmryIL$nperha[is.na(ACsmryIL$nperha)] <- 0
 
 # summarize acoustic data by interval only
 ACsmryI <- aggregate(ACsmryIL[, c("sum.rw", "nperha")], 
