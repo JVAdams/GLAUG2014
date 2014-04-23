@@ -466,7 +466,10 @@ if(save.plots) graphics.off()
 
 # total number and weight of each species in population
 truth <- cbind(n=table(fish$sp), kg=tapply(fish$wt, fish$sp, sum)/1000)
-truth <- rbind(truth, Total=apply(truth, 2, sum, na.rm=TRUE))
+truth <- as.data.frame(rbind(truth, Total=apply(truth, 2, sum, na.rm=TRUE)))
+
+truth$dens <- truth$n/lkinfo$LkArea[lkinfo$LC==sel.lk]
+truth$bio <- truth$kg/lkinfo$LkArea[lkinfo$LC==sel.lk]
 
 # save the true numbers and weights of each species in the population to a csv file
 write.csv(truth, file=paste(subdir, "/Truth-lake", sel.lk, ".csv", sep=""))
