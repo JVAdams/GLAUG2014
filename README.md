@@ -55,3 +55,12 @@ This information is also available on the U. S. Geological Survey - Great Lakes 
  * `ACSummaryIL-lake#-run#.csv` - summary of acoustic targets by interval (I) and layer (L)
  * `MTRCatch-lake#-run#.csv` - individual fish captured in midwater trawl
  * `Survey-lake#-run#.pdf` - diagnostic plots of acoustics and midwater trawl sampling
+
+## Additional files
+
+#### Several additional files were created for the Great Lakes Acoustic Users Group 2014 Workshop on Trawl Performance
+* `Availability.r` - interactive graph of availability relative to water depth for choosing coefficients
+* `Selectivity.r` - interactive graph of trawl selectivity relative to fish length for choosing coefficients
+* `Catchability Inputs.xlsx` - example spreadsheet for inputting availability and selectivity coefficients
+* `CatchComb.r` - apply catchability to the midwater trawl catch, combine with acoustic info (using regression trees), and summarize
+* `NearestTrawlByDepthStrata.r` **(NOT USED)** - assign the id of the nearest midwater trawl to each acoustic interval/layer

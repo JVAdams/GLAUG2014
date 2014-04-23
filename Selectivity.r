@@ -20,7 +20,7 @@ double.draw <- function(panel) {
 	panel
 	}
 
-# plot it, with a slider to adjust coeficients of the double logistic function
+# plot it, with a slider to adjust coefficients of the double logistic function
 windows(w=7, h=5)
 par(mar=c(4, 4, 1, 1))
 panel <- rp.control(x=1:2000, L501=10.1, SR1=10.1, L502=200.1, SR2=20.1)
