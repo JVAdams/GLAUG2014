@@ -309,7 +309,7 @@ old.n <- c("ACnorth")
 new.n <- c("north")
 names(sub.mat)[match(old.n, names(sub.mat))] <- new.n
 
-rm(easts, depth.contour, depth.cont.int, all.maxes, max.lays, full.mat) #all.ints
+rm(easts, depth.contour, depth.cont.int, all.maxes, max.lays, full.mat, all.ints, int.breaks, int.mids, lay.breaks, lay.mids)
 
 
 
