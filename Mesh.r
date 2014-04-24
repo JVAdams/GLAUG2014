@@ -56,7 +56,7 @@ drawmesh <- function(panel) {
 
 # plot it, with a slider to adjust coefficients of the double logistic function
 windows()
-par(mar=c(3, 3, 3, 1))
+par(mar=c(4, 4, 3, 1))
 panel <- rp.control(bodydepth=bodydepth, ldratio=ldratio, barmesh=barmesh, pctopen=pctopen)
 rp.slider(panel, bodydepth, 0.01, 5, resolution=0.01, showvalue=T, action=drawmesh, title="Body depth (inches)")
 rp.slider(panel, ldratio, 1, 20, resolution=0.1, showvalue=T, action=drawmesh, title="Fish length to depth ratio")
