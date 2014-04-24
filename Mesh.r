@@ -11,12 +11,6 @@ pctopen <- 0.2
 # bar mesh in inches (stretch mesh = bar mesh * 2)
 barmesh <- 1.5
 
-# fish length to body depth ratio
-ldratio <- 4.8
-
-# fish body depth in inches
-bodydepth <- 1
-
 ##########################################################################
 ############################  data crunching  ############################
 ##########################################################################
@@ -39,6 +33,12 @@ polar2cart <- function(r, theta, degrees=FALSE) {
 	y <- r * cos(rads)
 	c(x=x, y=y)
 	}
+
+# fish length to body depth ratio
+ldratio <- 4.8
+
+# fish body depth in inches
+bodydepth <- 1
 
 strmesh <- 2 * barmesh
 
