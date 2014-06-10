@@ -1,11 +1,19 @@
-artiFISHal
-==========
+GLAUG2014
+=========
 
-**artiFISHal** is a pelagic fish community simulator developed using the [R programming language](http://www.r-project.org/). It can be used to create artificial lakes and populate them with known numbers of fish (identified in species-size groups) to mimic pelagic fish communities. **artiFISHal** can then be used to sample these fish with virtual acoustic and midwater trawl surveys. 
+**GLAUG2014** contains files used during the Great Lakes Acoustic Users Group 2014 Workshop on Trawl Performance.
+I am currently working on recreating **artiFISHal** as an R package, [here](https://github.com/JVAdams/GLAUG2014).
+But the files in **GLAUG2014** should still continue to function as they did during the workshop.
 
-[Yule et al. (2013)](http://www.nrcresearchpress.com/doi/abs/10.1139/cjfas-2013-0072#.U1KYxPldXTQ) used **artiFISHal** to evaluate several different approaches for estimating the biomass of pelagic fish species in the Great Lakes.
+**artiFISHal** is a pelagic fish community simulator developed using the [R programming language](http://www.r-project.org/). 
+It can be used to create artificial lakes and populate them with known numbers of fish (identified in species-size groups) to mimic pelagic fish communities. 
+**artiFISHal** can then be used to sample these fish with virtual acoustic and midwater trawl surveys. 
 
-This information is also available on the U. S. Geological Survey - Great Lakes Science Center [website](http://www.glsc.usgs.gov/artifishal). As major changes are made to the code, a new version number will be assigned to **artiFISHal**, and it will be posted to that site.
+[Yule et al. (2013)](http://www.nrcresearchpress.com/doi/abs/10.1139/cjfas-2013-0072#.U1KYxPldXTQ) used **artiFISHal** 
+to evaluate several different approaches for estimating the biomass of pelagic fish species in the Great Lakes.
+
+This information is also available on the U. S. Geological Survey - Great Lakes Science Center [website](http://www.glsc.usgs.gov/artifishal). 
+As major changes are made to the code, a new version number will be assigned to **artiFISHal**, and it will be posted to that site.
 
 ## Instructions 
 
