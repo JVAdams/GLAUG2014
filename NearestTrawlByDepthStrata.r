@@ -35,53 +35,53 @@ if(sum(duplicated(sampinput$run.id))>0) stop(paste("Each row of the Sample tab i
 allfiles <- list.files(subdir)
 
 for(k in 1:dim(sampinput)[1]) {
-	lakeruncsvname <- paste0("-lake", sampinput$LC[k], "-run", sampinput$run.id[k], ".csv")
+  lakeruncsvname <- paste0("-lake", sampinput$LC[k], "-run", sampinput$run.id[k], ".csv")
 
-	ACsmryILname <- paste0("ACSummaryIL", lakeruncsvname)
-	MTRname <- paste0("MTRCatch", lakeruncsvname)
-	if(ACsmryILname %in% allfiles & MTRname %in% allfiles) {
+  ACsmryILname <- paste0("ACSummaryIL", lakeruncsvname)
+  MTRname <- paste0("MTRCatch", lakeruncsvname)
+  if(ACsmryILname %in% allfiles & MTRname %in% allfiles) {
 
-		ACsmryIL <- read.csv(paste(subdir, ACsmryILname, sep="/"))
-		MTR <- read.csv(paste(subdir, MTRname, sep="/"))
+    ACsmryIL <- read.csv(paste(subdir, ACsmryILname, sep="/"))
+    MTR <- read.csv(paste(subdir, MTRname, sep="/"))
 
-		# define number of sampling events
-		nS <- sampinput$nS[k]
+    # define number of sampling events
+    nS <- sampinput$nS[k]
 
-		# define depth strata
-		zstrat <- depthcutoff[sampinput$LC[k]]
+    # define depth strata
+    zstrat <- depthcutoff[sampinput$LC[k]]
 
-		# summarize the midwater trawl location (like sampinfo in earlier programs)
-		suM <- sort(unique(MTR$MTRid))
-		sampinf <- MTR[match(suM, MTR$MTRid), c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRfdep")]
+    # summarize the midwater trawl location (like sampinfo in earlier programs)
+    suM <- sort(unique(MTR$MTRid))
+    sampinf <- MTR[match(suM, MTR$MTRid), c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRfdep")]
 
-		# find the nearest midwater trawl to each acoustic interval/layer by x and y within z strata
-		# calculations must be done separately for each sampling event and depth stratum
-		ACsmryIL$nearest.MTRid <- NA
-		for(i in 1:nS) {
-			selAC <- ACsmryIL$Event==i & !is.na(ACsmryIL$fdep) & (ACsmryIL$fdep + 5) <= zstrat
-			selsi <- sampinf$Event==i & sampinf$MTRfdep <= zstrat
-			# if there are no MTRs in that depth zone, use all MTRs for that event
-			if(sum(selsi) < 0.5) selsi <- sampinf$Event==i
-			# if there are no MTRs in that event, no MTR can be assigned to that AC
-			if(sum(selsi) > 0.5) {
-				ACsmryIL$nearest.MTRid[selAC] <- as.numeric(as.character(knn1(sampinf[selsi, c("MTReast", "ACMTRnorth")], 
-					ACsmryIL[selAC, c("east", "north")], sampinf$MTRid[selsi])))
-				}
+    # find the nearest midwater trawl to each acoustic interval/layer by x and y within z strata
+    # calculations must be done separately for each sampling event and depth stratum
+    ACsmryIL$nearest.MTRid <- NA
+    for(i in 1:nS) {
+      selAC <- ACsmryIL$Event==i & !is.na(ACsmryIL$fdep) & (ACsmryIL$fdep + 5) <= zstrat
+      selsi <- sampinf$Event==i & sampinf$MTRfdep <= zstrat
+      # if there are no MTRs in that depth zone, use all MTRs for that event
+      if(sum(selsi) < 0.5) selsi <- sampinf$Event==i
+      # if there are no MTRs in that event, no MTR can be assigned to that AC
+      if(sum(selsi) > 0.5) {
+        ACsmryIL$nearest.MTRid[selAC] <- as.numeric(as.character(knn1(sampinf[selsi, c("MTReast", "ACMTRnorth")], 
+          ACsmryIL[selAC, c("east", "north")], sampinf$MTRid[selsi])))
+        }
 
-			selAC <- ACsmryIL$Event==i & !is.na(ACsmryIL$fdep) & (ACsmryIL$fdep + 5) > zstrat
-			selsi <- sampinf$Event==i & sampinf$MTRfdep > zstrat
-			# if there are no MTRs in that depth zone, use all MTRs for that event
-			if(sum(selsi) < 0.5) selsi <- sampinf$Event==i
-			# if there are no MTRs in that event, no MTR can be assigned to that AC
-			if(sum(selsi) > 0.5) {
-				ACsmryIL$nearest.MTRid[selAC] <- as.numeric(as.character(knn1(sampinf[selsi, c("MTReast", "ACMTRnorth")], 
-					ACsmryIL[selAC, c("east", "north")], sampinf$MTRid[selsi])))
-				}
-			}
+      selAC <- ACsmryIL$Event==i & !is.na(ACsmryIL$fdep) & (ACsmryIL$fdep + 5) > zstrat
+      selsi <- sampinf$Event==i & sampinf$MTRfdep > zstrat
+      # if there are no MTRs in that depth zone, use all MTRs for that event
+      if(sum(selsi) < 0.5) selsi <- sampinf$Event==i
+      # if there are no MTRs in that event, no MTR can be assigned to that AC
+      if(sum(selsi) > 0.5) {
+        ACsmryIL$nearest.MTRid[selAC] <- as.numeric(as.character(knn1(sampinf[selsi, c("MTReast", "ACMTRnorth")], 
+          ACsmryIL[selAC, c("east", "north")], sampinf$MTRid[selsi])))
+        }
+      }
 
-		# add size of catch from nearest trawl to ACsmryIL
-		ACsmryIL$near.mtr.catch <- recode(ACsmryIL$nearest.MTRid, sort(unique(MTR$MTRid)), table(MTR$MTRid))
+    # add size of catch from nearest trawl to ACsmryIL
+    ACsmryIL$near.mtr.catch <- recode(ACsmryIL$nearest.MTRid, sort(unique(MTR$MTRid)), table(MTR$MTRid))
 
-		write.csv(ACsmryIL, paste(subdir, paste("ACSummaryILwNearestTrawl", lakeruncsvname, sep=""), sep="/"))
-		}
+    write.csv(ACsmryIL, paste(subdir, paste("ACSummaryILwNearestTrawl", lakeruncsvname, sep=""), sep="/"))
+    }
 }

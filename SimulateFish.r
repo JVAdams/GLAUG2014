@@ -79,30 +79,30 @@ spinfo <- readWorksheet(wb, sheet="SimFish", startRow=22)
 
 # determine distance to shore given easting
 dfromx <- function(x, d2shr.we, eastr, mid.d) {
-	d <- rep(NA, length(x))
-	d[!is.na(x) & x <= mid.d] <-  d2shr.we[1] + x[!is.na(x) & x <= mid.d]
-	d[!is.na(x) & x >  mid.d] <- eastr[2] + d2shr.we[2] - x[!is.na(x) & x > mid.d]
-	d
-	}
+  d <- rep(NA, length(x))
+  d[!is.na(x) & x <= mid.d] <-  d2shr.we[1] + x[!is.na(x) & x <= mid.d]
+  d[!is.na(x) & x >  mid.d] <- eastr[2] + d2shr.we[2] - x[!is.na(x) & x > mid.d]
+  d
+  }
 
 # determine bottom depth given easting
 zfromx <- function(x, maxz, eastr, ints, slopes) {
-	z <- rep(NA, length(x))
-	z[!is.na(x) & x <= eastr[2]/3] <- slopes[1]*x[!is.na(x) & x <= eastr[2]/3] + ints[1]
-	z[!is.na(x) & x >  eastr[2]/3] <- slopes[2]*x[!is.na(x) & x >  eastr[2]/3] + ints[2]
-	ifelse(z > maxz, maxz, z)
-	}
+  z <- rep(NA, length(x))
+  z[!is.na(x) & x <= eastr[2]/3] <- slopes[1]*x[!is.na(x) & x <= eastr[2]/3] + ints[1]
+  z[!is.na(x) & x >  eastr[2]/3] <- slopes[2]*x[!is.na(x) & x >  eastr[2]/3] + ints[2]
+  ifelse(z > maxz, maxz, z)
+  }
 
 # determine easting given bottom depth
 # incorporate random assignment to west or east shore if not specified
 xfromz <- function(z, maxz, ints, slopes, shore="random") {
-	x <- rep(NA, length(z))
-	side <- if(shore[1]=="random") sample(0:1, length(z), replace=TRUE) else shore
-	x[!is.na(z) & side==0] <- (z[!is.na(z) & side==0] - ints[1]) / slopes[1]
-	x[!is.na(z) & side==1] <- (z[!is.na(z) & side==1] - ints[2]) / slopes[2]
-	x[z >= maxz] <- runif(sum(z >= maxz), (maxz - ints[1]) / slopes[1], (maxz - ints[2]) / slopes[2])
-	x
-	}
+  x <- rep(NA, length(z))
+  side <- if(shore[1]=="random") sample(0:1, length(z), replace=TRUE) else shore
+  x[!is.na(z) & side==0] <- (z[!is.na(z) & side==0] - ints[1]) / slopes[1]
+  x[!is.na(z) & side==1] <- (z[!is.na(z) & side==1] - ints[2]) / slopes[2]
+  x[z >= maxz] <- runif(sum(z >= maxz), (maxz - ints[1]) / slopes[1], (maxz - ints[2]) / slopes[2])
+  x
+  }
 
 
 # select data from one lake for creation of artificial population
@@ -141,7 +141,7 @@ tsr <- c(lkinfo$TSMin[sel.lk], lkinfo$TSMax[sel.lk])
 
 # save selected objects for use in sampling programs
 save(lkinfo, dfromx, zfromx, xfromz, botdepr, maxbotdep, eastr, northr, tsr, slopes, ints, d2shr.we, mid.d,
-	file=paste(subdir, "/inputs-lake", sel.lk, ".Rdata", sep=""))
+  file=paste(subdir, "/inputs-lake", sel.lk, ".Rdata", sep=""))
 
 
 
@@ -151,7 +151,7 @@ save(lkinfo, dfromx, zfromx, xfromz, botdepr, maxbotdep, eastr, northr, tsr, slo
 look <- spinfo[, c("WD", "D2B")]
 not1na <- apply(is.na(look), 1, sum) != 1
 if(sum(not1na)>0) stop(paste("Rows ", paste(seq_along(not1na)[not1na], collapse=", "), 
-	".  Either a mean fishing depth or a mean distance to bottom MUST be specified, but NOT BOTH!", sep=""))
+  ".  Either a mean fishing depth or a mean distance to bottom MUST be specified, but NOT BOTH!", sep=""))
 rm(look, not1na)
 
 nrowz <- dim(spinfo)[1]
@@ -166,46 +166,46 @@ fish <- data.frame(sp=rep(G, Nfish), f.east=NA, f.north=NA, f.d2sh=NA, f.botdep=
 set.seed(lkinfo$Seed[sel.lk])
 for(i in seq(nrowz)) {
 
-	# easting available? no, then yes
-	if(is.na(E[i])) {
-		f.east <- runif(Nfish[i], eastr[1], eastr[2])
-		f.d2sh <- dfromx(x=f.east, d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
-		f.botdep <- zfromx(x=f.east, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
-		} else {
-		f.east <- rnorm(Nfish[i], 1000*E[i], 1000*EE[i]*E[i])
-		f.d2sh <- dfromx(x=f.east, d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
-		f.botdep <- zfromx(x=f.east, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
-		}
+  # easting available? no, then yes
+  if(is.na(E[i])) {
+    f.east <- runif(Nfish[i], eastr[1], eastr[2])
+    f.d2sh <- dfromx(x=f.east, d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
+    f.botdep <- zfromx(x=f.east, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
+    } else {
+    f.east <- rnorm(Nfish[i], 1000*E[i], 1000*EE[i]*E[i])
+    f.d2sh <- dfromx(x=f.east, d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
+    f.botdep <- zfromx(x=f.east, maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
+    }
 
-	# northing available? no, then yes
-	if(is.na(N[i])) {
-		f.north <- runif(Nfish[i], northr[1], northr[2])
-		} else {
-		f.north <- rnorm(Nfish[i], 1000*N[i], 1000*NE[i]*N[i])
-		}
+  # northing available? no, then yes
+  if(is.na(N[i])) {
+    f.north <- runif(Nfish[i], northr[1], northr[2])
+    } else {
+    f.north <- rnorm(Nfish[i], 1000*N[i], 1000*NE[i]*N[i])
+    }
 
-	# distance to bottom available? no, then yes (if not, fishing depth is)
-	if(is.na(D2B[i])) {
-		f.fdep <- rnorm(Nfish[i], WD[i], WDE[i]*WD[i])
-		f.d2bot <- f.botdep - f.fdep
-		} else {
-		f.d2bot <- rnorm(Nfish[i], D2B[i], D2BE[i]*D2B[i])
-		f.fdep <- f.botdep - f.d2bot
-		}
+  # distance to bottom available? no, then yes (if not, fishing depth is)
+  if(is.na(D2B[i])) {
+    f.fdep <- rnorm(Nfish[i], WD[i], WDE[i]*WD[i])
+    f.d2bot <- f.botdep - f.fdep
+    } else {
+    f.d2bot <- rnorm(Nfish[i], D2B[i], D2BE[i]*D2B[i])
+    f.fdep <- f.botdep - f.d2bot
+    }
 
-	# generate lengths from gamma distribution
-	shape <- 1/ZE[i]^2
-	scale <- Z[i]/shape
-	len <- rgamma(Nfish[i], shape=shape, scale=scale)
-	# predict weight from length-weight regression coefficients and add error
-	wt. <- LWC1[i]*len^LWC2[i]
-	wt <- wt. + rnorm(Nfish[i], 0, LWCE[i]*wt.)
-	# predict target strength from length-ts regression coefficients and add error
-	ts. <- TSC1[i] + TSC2[i]*log10(len/10)
-	ts <- ts. + rnorm(Nfish[i], 0, TSCE[i]*abs(ts.))
+  # generate lengths from gamma distribution
+  shape <- 1/ZE[i]^2
+  scale <- Z[i]/shape
+  len <- rgamma(Nfish[i], shape=shape, scale=scale)
+  # predict weight from length-weight regression coefficients and add error
+  wt. <- LWC1[i]*len^LWC2[i]
+  wt <- wt. + rnorm(Nfish[i], 0, LWCE[i]*wt.)
+  # predict target strength from length-ts regression coefficients and add error
+  ts. <- TSC1[i] + TSC2[i]*log10(len/10)
+  ts <- ts. + rnorm(Nfish[i], 0, TSCE[i]*abs(ts.))
 
-	fish[start.i[i]:end.i[i], -1] <- cbind(f.east, f.north, f.d2sh, f.botdep, f.fdep, f.d2bot, len, wt, ts)
-	}
+  fish[start.i[i]:end.i[i], -1] <- cbind(f.east, f.north, f.d2sh, f.botdep, f.fdep, f.d2bot, len, wt, ts)
+  }
 
 
 rm(i, start.i, end.i, f.east, f.north, f.d2sh, f.botdep, f.fdep, f.d2bot, shape, scale, len, wt., wt, ts., ts)
@@ -256,23 +256,23 @@ sus <- sort(unique(sp))
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=c(1, 1), oma=rep(0, 4), mar=c(5.1, 4.1, 4.1, 2.1))
 plot(f.east/1000, -f.fdep, type="n", xlim=eastr/1000, ylim=c(-maxbotdep, 0), 
-	xlab="Easting  (km)", ylab="Water depth  (m)", main=paste(lkinfo$Lake[sel.lk], "- Side View"))
+  xlab="Easting  (km)", ylab="Water depth  (m)", main=paste(lkinfo$Lake[sel.lk], "- Side View"))
 lines(c(0, xfromz(z=rep(maxbotdep-0.01, 2), maxz=maxbotdep, ints=ints, slopes=slopes, shore=0:1), eastr[c(2, 2, 1, 1)])/1000, 
-	-c(botdepr[1], rep(maxbotdep, 2), botdepr[1], 0, 0, botdepr[1]))
+  -c(botdepr[1], rep(maxbotdep, 2), botdepr[1], 0, 0, botdepr[1]))
 
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	text(f.east[sel]/1000, -f.fdep[sel], sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  text(f.east[sel]/1000, -f.fdep[sel], sp[sel], col=i)
+  }
 
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=c(1, 1), oma=rep(0, 4), mar=c(5.1, 4.1, 4.1, 2.1))
 plot(f.east/1000, f.north/1000, type="n", xlim=eastr/1000, ylim=northr/1000, 
-	xlab="Easting  (km)", ylab="Northing  (km)", main=paste(lkinfo$Lake[sel.lk], "- Top View"))
+  xlab="Easting  (km)", ylab="Northing  (km)", main=paste(lkinfo$Lake[sel.lk], "- Top View"))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	text(f.east[sel]/1000, f.north[sel]/1000, sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  text(f.east[sel]/1000, f.north[sel]/1000, sp[sel], col=i)
+  }
 
 detach(fish[pick, ])
 
@@ -288,12 +288,12 @@ sus <- sort(unique(sp))
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	plot(f.east/1000, -f.fdep, type="n", xlim=eastr/1000, ylim=c(-maxbotdep, 0), xlab="", ylab="")
-	lines(c(0, xfromz(z=rep(maxbotdep-0.01, 2), maxz=maxbotdep, ints=ints, slopes=slopes, shore=0:1), eastr[c(2, 2, 1, 1)])/1000, 
-		-c(botdepr[1], rep(maxbotdep, 2), botdepr[1], 0, 0, botdepr[1]))
-	text(f.east[sel]/1000, -f.fdep[sel], sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  plot(f.east/1000, -f.fdep, type="n", xlim=eastr/1000, ylim=c(-maxbotdep, 0), xlab="", ylab="")
+  lines(c(0, xfromz(z=rep(maxbotdep-0.01, 2), maxz=maxbotdep, ints=ints, slopes=slopes, shore=0:1), eastr[c(2, 2, 1, 1)])/1000, 
+    -c(botdepr[1], rep(maxbotdep, 2), botdepr[1], 0, 0, botdepr[1]))
+  text(f.east[sel]/1000, -f.fdep[sel], sp[sel], col=i)
+  }
 mtext("Easting  (km)", side=1, outer=TRUE)
 mtext("Water depth  (m)", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Side View"), side=3, outer=TRUE, font=2)
@@ -301,10 +301,10 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Side View"), side=3, outer=TRUE, font=2)
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	plot(f.east/1000, f.north/1000, type="n", xlim=eastr/1000, ylim=northr/1000, xlab="", ylab="")
-	text(f.east[sel]/1000, f.north[sel]/1000, sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  plot(f.east/1000, f.north/1000, type="n", xlim=eastr/1000, ylim=northr/1000, xlab="", ylab="")
+  text(f.east[sel]/1000, f.north[sel]/1000, sp[sel], col=i)
+  }
 mtext("Easting  (km)", side=1, outer=TRUE)
 mtext("Northing  (km)", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Top View"), side=3, outer=TRUE, font=2)
@@ -312,28 +312,28 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Top View"), side=3, outer=TRUE, font=2)
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=c(1, 1), oma=rep(0, 4), mar=c(5.1, 4.1, 4.1, 2.1))
 plot(len, -f.fdep, type="n", xlab="Fish length  (mm)", ylab="Water depth  (m)", 
-	main=paste(lkinfo$Lake[sel.lk], "- Size at Depth"))
+  main=paste(lkinfo$Lake[sel.lk], "- Size at Depth"))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	text(len[sel], -f.fdep[sel], sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  text(len[sel], -f.fdep[sel], sp[sel], col=i)
+  }
 
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=c(1, 1), oma=rep(0, 4), mar=c(5.1, 4.1, 4.1, 2.1))
 plot(ts, -f.fdep, type="n", xlab="Target strength  (dB)", ylab="Water depth  (m)", 
-	main=paste(lkinfo$Lake[sel.lk], "- Size at Depth"))
+  main=paste(lkinfo$Lake[sel.lk], "- Size at Depth"))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	text(ts[sel], -f.fdep[sel], sp[sel], col=i)
-	}
+  sel <- sp==sus[i]
+  text(ts[sel], -f.fdep[sel], sp[sel], col=i)
+  }
 
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	plot(len[sel], wt[sel], xlab="", ylab="")
-	mtext(sus[i], side=3, adj=0.1, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  plot(len[sel], wt[sel], xlab="", ylab="")
+  mtext(sus[i], side=3, adj=0.1, line=-2, font=2)
+  }
 mtext("Length  (mm)", side=1, outer=TRUE)
 mtext("Weight  (mm)", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Length-Weight Relation"), side=3, outer=TRUE, font=2)
@@ -351,11 +351,11 @@ sus <- sort(unique(sp))
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(len[sel], nclass=25, col="gray", xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(len[sel], nclass=25, col="gray", xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Length  (mm)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Length Distribution"), side=3, outer=TRUE, font=2)
@@ -363,11 +363,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Length Distribution"), side=3, outer=TRUE, f
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(wt[sel], nclass=25, col="gray", xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(wt[sel], nclass=25, col="gray", xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Weight  (g)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Weight Distribution"), side=3, outer=TRUE, font=2)
@@ -375,11 +375,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Weight Distribution"), side=3, outer=TRUE, f
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(ts[sel], nclass=25, col="gray", xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(ts[sel], nclass=25, col="gray", xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Target strength  (dB)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- TS Distribution"), side=3, outer=TRUE, font=2)
@@ -387,11 +387,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- TS Distribution"), side=3, outer=TRUE, font=
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.east[sel]/1000, nclass=25, col="gray", xlim=eastr/1000, xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.east[sel]/1000, nclass=25, col="gray", xlim=eastr/1000, xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Easting  (km)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Easting Distribution"), side=3, outer=TRUE, font=2)
@@ -399,11 +399,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Easting Distribution"), side=3, outer=TRUE, 
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.north[sel]/1000, nclass=25, col="gray", xlim=northr/1000, xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.north[sel]/1000, nclass=25, col="gray", xlim=northr/1000, xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Northing  (km)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Northing Distribution"), side=3, outer=TRUE, font=2)
@@ -411,11 +411,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Northing Distribution"), side=3, outer=TRUE,
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.d2sh[sel], nclass=25, col="gray", xlim=d2shr, xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.d2sh[sel], nclass=25, col="gray", xlim=d2shr, xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Distance to Shore  (m)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Distance to Shore Distribution"), side=3, outer=TRUE, font=2)
@@ -423,11 +423,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Distance to Shore Distribution"), side=3, ou
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.fdep[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.fdep[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Fishing Depth  (m)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Fishing Depth Distribution"), side=3, outer=TRUE, font=2)
@@ -435,11 +435,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Fishing Depth Distribution"), side=3, outer=
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.d2bot[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.d2bot[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Distance to Bottom  (m)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Distance to Bottom Distribution"), side=3, outer=TRUE, font=2)
@@ -447,11 +447,11 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Distance to Bottom Distribution"), side=3, o
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sus)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 for(i in seq(along=sus)) {
-	sel <- sp==sus[i]
-	hist(f.botdep[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
-	box()
-	mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
-	}
+  sel <- sp==sus[i]
+  hist(f.botdep[sel], nclass=25, col="gray", xlim=c(0, maxbotdep), xlab="", ylab="", main="")
+  box()
+  mtext(sus[i], side=3, adj=0.9, line=-2, font=2)
+  }
 mtext("Bottom Depth  (m)", side=1, outer=TRUE)
 mtext("Frequency", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Bottom Depth Distribution"), side=3, outer=TRUE, font=2)
@@ -479,4 +479,4 @@ truth
 
 # remove all objects from current working directory
 rm(botdepr, cap.no.fish, d2shr, d2shr.we, dfromx, dir, eastr, fish, i, ints, lkinfo, maxbotdep, mid.d, n, northr, nrowz, 
-	pick, rows.sp, save.plots, sel, sel.lk, slopes, spinfo, subdir, sus, totfish, TotNFish, truth, tsr, xfromz, zfromx, wb)
+  pick, rows.sp, save.plots, sel, sel.lk, slopes, spinfo, subdir, sus, totfish, TotNFish, truth, tsr, xfromz, zfromx, wb)

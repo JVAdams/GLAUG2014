@@ -80,7 +80,7 @@ load(file=paste(subdir, "/inputs-lake", sel.lk, ".Rdata", sep=""))
 # clear all graphics windows
 graphics.off()
 if(save.plots) pdf(paste(subdir, "/Survey-lake", sel.lk, "-run", sel.run, ".pdf", sep=""), width=9, height=6.5, 
-	title="Survey", paper="USr")
+  title="Survey", paper="USr")
 
 # function to recode values
 recode <- function(x, old, new, must.match=TRUE) {
@@ -114,7 +114,7 @@ ACid <- 1:(nA*nS)
 ACspace <- diff(northr)/nA
 
 sampinfo <- as.data.frame(matrix(NA, nrow=nT2*nS, ncol=10, 
-	dimnames=list(NULL, c("Event", "ACid", "ACnorth", "MTRgrp", "MTRid", "MTReast", "MTRbdep", "MTRfdep", "MTRd2sh", "MTRd2bot"))))
+  dimnames=list(NULL, c("Event", "ACid", "ACnorth", "MTRgrp", "MTRid", "MTReast", "MTRbdep", "MTRfdep", "MTRd2sh", "MTRd2bot"))))
 sampinfo$Event <- rep(1:nS, rep(nT2, nS))
 sampinfo$ACid <- rep(1:(nA*nS), rep(nT2/nA, nA*nS))
 sampinfo$MTRgrp <- rep(1:(nT2/nA), nA*nS)
@@ -122,26 +122,26 @@ sampinfo$MTRid <- seq(along=sampinfo$MTRgrp)
 
 set.seed(sampinput$seed[sampinput$run.id==sel.run])
 for(k in 1:nS) {
-	sel <- sampinfo$Event==k
-	ACstart <- runif(1, northr[1], northr[2])
-	ACnorth <- sort(unique(c(seq(ACstart, northr[1], -ACspace), seq(ACstart, northr[2], ACspace))))
-	sampinfo$ACnorth[sel] <- rep(ACnorth, rep(nT2/nA, nA))
-	sampinfo$MTReast[sel] <- runif(nT2, eastr[1]+tow.l/2, eastr[2]-tow.l/2)
+  sel <- sampinfo$Event==k
+  ACstart <- runif(1, northr[1], northr[2])
+  ACnorth <- sort(unique(c(seq(ACstart, northr[1], -ACspace), seq(ACstart, northr[2], ACspace))))
+  sampinfo$ACnorth[sel] <- rep(ACnorth, rep(nT2/nA, nA))
+  sampinfo$MTReast[sel] <- runif(nT2, eastr[1]+tow.l/2, eastr[2]-tow.l/2)
 
-	# calculate midwater trawl measures for the MIDPOINT of the trawl
-	sampinfo$MTRbdep[sel] <- zfromx(x=sampinfo$MTReast[sel], maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
+  # calculate midwater trawl measures for the MIDPOINT of the trawl
+  sampinfo$MTRbdep[sel] <- zfromx(x=sampinfo$MTReast[sel], maxz=maxbotdep, eastr=eastr, ints=ints, slopes=slopes)
 
-	# random selection of midwater trawl depth
-	sampinfo$MTRfdep[sel] <- runif(nT2, 0+(trawl.h/2), sampinfo$MTRbdep[sel]-(trawl.h/2))
+  # random selection of midwater trawl depth
+  sampinfo$MTRfdep[sel] <- runif(nT2, 0+(trawl.h/2), sampinfo$MTRbdep[sel]-(trawl.h/2))
 
-	sampinfo$MTRd2sh[sel] <- dfromx(x=sampinfo$MTReast[sel], d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
-	sampinfo$MTRd2bot[sel] <- sampinfo$MTRbdep[sel] - sampinfo$MTRfdep[sel]
+  sampinfo$MTRd2sh[sel] <- dfromx(x=sampinfo$MTReast[sel], d2shr.we=d2shr.we, eastr=eastr, mid.d=mid.d)
+  sampinfo$MTRd2bot[sel] <- sampinfo$MTRbdep[sel] - sampinfo$MTRfdep[sel]
 
-	# make sure acoustic transect cones don't overlap
-	mindist.allowed <- botdepr[2]*tan(pi*cone.deg/2/360)
-	mindist.observed <- min(diff(sort(ACnorth)))
-	if(mindist.observed < mindist.allowed) stop("Acoustic transects are too close together.")
-	}
+  # make sure acoustic transect cones don't overlap
+  mindist.allowed <- botdepr[2]*tan(pi*cone.deg/2/360)
+  mindist.observed <- min(diff(sort(ACnorth)))
+  if(mindist.observed < mindist.allowed) stop("Acoustic transects are too close together.")
+  }
 
 # make sure that all of the acoustic transects are kept ... even if they have no midwater trawls associated with them
 ACsampinfo <- sampinfo[first(sampinfo$ACid)==1, 1:3]
@@ -153,9 +153,9 @@ hits.bottom <- (MTRbdep1 - (sampinfo$MTRfdep + trawl.h/2)) < 0 | (MTRbdep2 - (sa
 
 # make sure that midwater trawl doesn't extend too far east/west/north/south
 extends.out <- sampinfo$ACnorth - trawl.w/2 < northr[1] |
-	sampinfo$ACnorth + trawl.w/2 > northr[2] |
-	sampinfo$MTReast - tow.l/2 < eastr[1] |
-	sampinfo$MTReast + tow.l/2 > eastr[2]
+  sampinfo$ACnorth + trawl.w/2 > northr[2] |
+  sampinfo$MTReast - tow.l/2 < eastr[1] |
+  sampinfo$MTReast + tow.l/2 > eastr[2]
 
 sampinfo <- sampinfo[!hits.bottom & !extends.out, ]
 
@@ -175,7 +175,7 @@ half.cone.rad <- 2*pi*(cone.deg/2)/360
 # select only those targets within the volume of space sampled by the acoustic transect (triangular prism)
 sua <- sort(unique(ACid))
 AC <- data.frame(matrix(NA, nrow=0, ncol=13, dimnames=list(NULL, c("Event", "ACid", "ACnorth", 
-	"sp", "f.east", "f.north", "f.d2sh", "f.botdep", "f.fdep", "f.d2bot", "len", "wt", "ts"))))
+  "sp", "f.east", "f.north", "f.d2sh", "f.botdep", "f.fdep", "f.d2bot", "len", "wt", "ts"))))
 # acoustic slice cone cushion, based on angle of transducer and maximum depth
 cushion <- botdepr[2]*tan(half.cone.rad)
 
@@ -191,20 +191,20 @@ rm(ncol)
 
 # acoustic transects
 for(j in sua) {
-	# make sure that the acoustic slice does not extend further north or south than our sample space
-	if(ACnorth[j] > (northr[2] - cushion) | ACnorth[j] < (northr[1] + cushion)) 
-		stop(paste("ACid = ", ACid[j], ", ACnorth = ", ACnorth[j], 
-			": The cone of the acoustic slice extends farther north or south than the boundary of our simulated lake."))
-	sel <- (abs(fish$f.north - ACnorth[j])) < (fish$f.fdep*tan(half.cone.rad))
+  # make sure that the acoustic slice does not extend further north or south than our sample space
+  if(ACnorth[j] > (northr[2] - cushion) | ACnorth[j] < (northr[1] + cushion)) 
+    stop(paste("ACid = ", ACid[j], ", ACnorth = ", ACnorth[j], 
+      ": The cone of the acoustic slice extends farther north or south than the boundary of our simulated lake."))
+  sel <- (abs(fish$f.north - ACnorth[j])) < (fish$f.fdep*tan(half.cone.rad))
 
-	if(sum(sel)>0) {
-		temp <- data.frame(ACsampinfo[rep(j, sum(sel)), c("Event", "ACid", "ACnorth")], fish[sel, ])
-		AC <- rbind(AC, temp)
-		} else {
-		temp <- data.frame(ACsampinfo[rep(j, 1), c("Event", "ACid", "ACnorth")], nofish)
-		AC <- rbind(AC, temp)
-		}
-	}
+  if(sum(sel)>0) {
+    temp <- data.frame(ACsampinfo[rep(j, sum(sel)), c("Event", "ACid", "ACnorth")], fish[sel, ])
+    AC <- rbind(AC, temp)
+    } else {
+    temp <- data.frame(ACsampinfo[rep(j, 1), c("Event", "ACid", "ACnorth")], nofish)
+    AC <- rbind(AC, temp)
+    }
+  }
 
 rm(cushion)
 
@@ -217,18 +217,18 @@ attach(sampinfo)
 # select only those targets within the volume of space sampled by the midwater trawl (rectangular prism)
 sut <- sort(unique(MTRid))
 MTRbig <- data.frame(matrix(NA, nrow=0, ncol=20, dimnames=list(NULL, 
-	c("Event", "ACid", "ACnorth", "MTRgrp", "MTRid", "MTReast", "MTRbdep", "MTRfdep", "MTRd2sh", "MTRd2bot", 
-	"sp", "f.east", "f.north", "f.d2sh", "f.botdep", "f.fdep", "f.d2bot", "len", "wt", "ts"))))
+  c("Event", "ACid", "ACnorth", "MTRgrp", "MTRid", "MTReast", "MTRbdep", "MTRfdep", "MTRd2sh", "MTRd2bot", 
+  "sp", "f.east", "f.north", "f.d2sh", "f.botdep", "f.fdep", "f.d2bot", "len", "wt", "ts"))))
 for(m in sut) {
-	j <- match(m, MTRid)
-	sel <- fish$f.north >= (ACnorth[j] - trawl.w/2) & fish$f.north <= (ACnorth[j] + trawl.w/2) &
-		fish$f.east >= (MTReast[j] - tow.l/2) & fish$f.east <= (MTReast[j] + tow.l/2) &
-		fish$f.fdep <= (MTRfdep[j] + trawl.h/2) & fish$f.fdep >= (MTRfdep[j] - trawl.h/2)
-	if(sum(sel) >= min.no.fish.per.haul) {
-		temp <- cbind(sampinfo[rep(j, sum(sel)), ], fish[sel, ])
-		MTRbig <- rbind(MTRbig, temp)
-		}
-	}
+  j <- match(m, MTRid)
+  sel <- fish$f.north >= (ACnorth[j] - trawl.w/2) & fish$f.north <= (ACnorth[j] + trawl.w/2) &
+    fish$f.east >= (MTReast[j] - tow.l/2) & fish$f.east <= (MTReast[j] + tow.l/2) &
+    fish$f.fdep <= (MTRfdep[j] + trawl.h/2) & fish$f.fdep >= (MTRfdep[j] - trawl.h/2)
+  if(sum(sel) >= min.no.fish.per.haul) {
+    temp <- cbind(sampinfo[rep(j, sum(sel)), ], fish[sel, ])
+    MTRbig <- rbind(MTRbig, temp)
+    }
+  }
 
 
 
@@ -246,8 +246,8 @@ mtr.indx.sort <- mtr.indx[order(mtr.indx$Event, mtr.indx$mtr.grp, y), ]
 f <- first(mtr.indx.sort$Event)
 x <- rep(NA, length(f))
 for(ix in 1:length(f)) {
-	x[ix] <- if(f[ix]==1) 1 else x[ix-1]+1
-	}
+  x[ix] <- if(f[ix]==1) 1 else x[ix-1]+1
+  }
 mtr.indx.sort$mtr.count <- x
 # keep the first nT trawls in each event
 mtr.indx.keep <- mtr.indx.sort[mtr.indx.sort$mtr.count <= nT, ]
@@ -342,7 +342,7 @@ ACsmryIL$d2sh <- dfromx(x=ACsmryIL$east, d2shr.we=d2shr.we, eastr=eastr, mid.d=m
 
 # summarize acoustic data by interval only
 ACsmryI <- aggregate(ACsmryIL[, c("sum.rw", "nperha")], 
-	ACsmryIL[, c("Event", "ACid", "interval", "north", "east", "botdep", "d2sh")], sum)
+  ACsmryIL[, c("Event", "ACid", "interval", "north", "east", "botdep", "d2sh")], sum)
 ACsmryI <- ACsmryI[order(ACsmryI$Event, ACsmryI$ACid, ACsmryI$interval), ]
 
 
@@ -351,29 +351,29 @@ ac.out.vars <- c("Event", "ACid", "interval", "layer", "f.east", "f.north", "f.d
 acsumil.out.vars <- c("Event", "ACid", "interval", "layer", "east", "north", "d2sh", "botdep", "fdep", "d2bot", "nperha")
 acsumi.out.vars <- c("Event", "ACid", "interval", "east", "north", "d2sh", "botdep", "nperha")
 mtr.out.vars <- c("Event", "ACid", "MTRid", "MTReast", "ACMTRnorth", "MTRd2sh", "MTRbdep", "MTRfdep", "MTRd2bot", "sp", "len", "wt", 
-	"f.east", "f.north", "f.botdep", "f.fdep", "f.d2bot")
+  "f.east", "f.north", "f.botdep", "f.fdep", "f.d2bot")
 # vars NOT kept from MTR ... "MTRgrp", "f.d2sh", "ts"
 
 #### only save *1* sampling event, if that is what was originally specified ###
 if(nS.orig==1) {
-	write.csv(AC[AC$Event==1, ac.out.vars], 
-		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(ACsmryIL[ACsmryIL$Event==1, acsumil.out.vars], 
-		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(ACsmryI[ACsmryI$Event==1, acsumi.out.vars], 
-		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(MTR[MTR$Event==1, mtr.out.vars], 
-		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	} else {
-	write.csv(AC[, ac.out.vars], 
-		paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(ACsmryIL[, acsumil.out.vars], 
-		paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(ACsmryI[, acsumi.out.vars], 
-		paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	write.csv(MTR[, mtr.out.vars], 
-		paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
-	}
+  write.csv(AC[AC$Event==1, ac.out.vars], 
+    paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(ACsmryIL[ACsmryIL$Event==1, acsumil.out.vars], 
+    paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(ACsmryI[ACsmryI$Event==1, acsumi.out.vars], 
+    paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(MTR[MTR$Event==1, mtr.out.vars], 
+    paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  } else {
+  write.csv(AC[, ac.out.vars], 
+    paste(subdir, paste("ACTargets-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(ACsmryIL[, acsumil.out.vars], 
+    paste(subdir, paste("ACSummaryIL-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(ACsmryI[, acsumi.out.vars], 
+    paste(subdir, paste("ACSummaryI-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  write.csv(MTR[, mtr.out.vars], 
+    paste(subdir, paste("MTRCatch-lake", sel.lk, "-run", sel.run, ".csv", sep=""), sep="/"), row.names=FALSE)
+  }
 rm(ac.out.vars, acsumil.out.vars, acsumi.out.vars, mtr.out.vars)
 
 
@@ -391,19 +391,19 @@ sut <- sort(unique(MTRid[Event==1]))
 if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=c(1, 1), oma=rep(0, 4), mar=c(5.1, 4.1, 4.1, 2.1))
 eqscplot(1, 1, type="n", xlim=eastr/1000, ylim=northr/1000, axes=FALSE, xlab="Easting  (km)", ylab="Northing  (km)", 
-	main=paste(lkinfo$Lake[sel.lk], "- Top View - drawn to scale"))
+  main=paste(lkinfo$Lake[sel.lk], "- Top View - drawn to scale"))
 axis(1)
 axis(2)
 arrows(rep(eastr[1], length(sua))/1000, AC$ACnorth[match(sua, AC$ACid[sel])]/1000, 
-	rep(eastr[2], length(sua))/1000, AC$ACnorth[match(sua, AC$ACid[sel])]/1000, length=0, lwd=2, col="blue") 
+  rep(eastr[2], length(sua))/1000, AC$ACnorth[match(sua, AC$ACid[sel])]/1000, length=0, lwd=2, col="blue") 
 polygon(eastr[c(1, 2, 2, 1)]/1000, northr[c(1, 1, 2, 2)]/1000)
 if(length(sut)>0) {
-	for(m in seq(along=sut)) {
-		sel2 <- MTRid==sut[m]
-		polygon((MTReast[sel2]+c(-1, 1, 1, -1)*tow.l/2)/1000, (ACnorth[sel2]+c(1, 1, -1, -1)*trawl.w/2)/1000, border="red", lwd=3)
-		}
-	rm(sel2)
-	}
+  for(m in seq(along=sut)) {
+    sel2 <- MTRid==sut[m]
+    polygon((MTReast[sel2]+c(-1, 1, 1, -1)*tow.l/2)/1000, (ACnorth[sel2]+c(1, 1, -1, -1)*trawl.w/2)/1000, border="red", lwd=3)
+    }
+  rm(sel2)
+  }
 
 
 # plot of each acoustic transect with outline of midwater trawl tows
@@ -411,21 +411,21 @@ if(!save.plots) windows(w=9, h=6.5)
 par(mfrow=n2mfrow(length(sua)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
 catch.tots <- table(MTR$MTRid)
 for(j in seq(along=sua)) {
-	plot(AC$f.east/1000, -AC$f.fdep, type="n", xlab="", ylab="")
-	sel3 <- AC$ACid==sua[j]
-	points(AC$f.east[sel3]/1000, -AC$f.fdep[sel3], cex=2*ts.scaled, col="blue")
-	points(AC$f.east[sel3]/1000, -AC$f.botdep[sel3], pch=16, cex=0.5)
-	sut2 <- sort(unique(MTRid[ACid==sua[j]]))
-	mtext(paste("id=", sua[j], "\nn=", sum(sel3), sep=""), side=1, line=-1.5, adj=0.98, font=2, cex=par("cex"))
-	if(length(sut2)>0) {
-		for(m in seq(along=sut2)) {
-			sel2 <- MTRid==sut2[m]
-			polygon((MTReast[sel2]+c(-1, 1, 1, -1)*tow.l/2)/1000, -MTRfdep[sel2]+c(1, 1, -1, -1)*trawl.h/2, border="red", col="white")
-			text(MTReast[sel2]/1000, -MTRfdep[sel2], catch.tots[sel2], font=2, col="red")
-			}
-		rm(sel2)
-		}
-	}
+  plot(AC$f.east/1000, -AC$f.fdep, type="n", xlab="", ylab="")
+  sel3 <- AC$ACid==sua[j]
+  points(AC$f.east[sel3]/1000, -AC$f.fdep[sel3], cex=2*ts.scaled, col="blue")
+  points(AC$f.east[sel3]/1000, -AC$f.botdep[sel3], pch=16, cex=0.5)
+  sut2 <- sort(unique(MTRid[ACid==sua[j]]))
+  mtext(paste("id=", sua[j], "\nn=", sum(sel3), sep=""), side=1, line=-1.5, adj=0.98, font=2, cex=par("cex"))
+  if(length(sut2)>0) {
+    for(m in seq(along=sut2)) {
+      sel2 <- MTRid==sut2[m]
+      polygon((MTReast[sel2]+c(-1, 1, 1, -1)*tow.l/2)/1000, -MTRfdep[sel2]+c(1, 1, -1, -1)*trawl.h/2, border="red", col="white")
+      text(MTReast[sel2]/1000, -MTRfdep[sel2], catch.tots[sel2], font=2, col="red")
+      }
+    rm(sel2)
+    }
+  }
 mtext("Easting  (km)", side=1, outer=TRUE)
 mtext("Fishing depth  (m)", side=2, outer=TRUE)
 mtext(paste(lkinfo$Lake[sel.lk], "- Acoustic Transects and Midwater Trawls"), side=3, outer=TRUE, font=2)
@@ -433,25 +433,25 @@ mtext(paste(lkinfo$Lake[sel.lk], "- Acoustic Transects and Midwater Trawls"), si
 
 # plot of each midwater trawl catch
 if(length(sut)>0) {
-	barz <- tapply(!is.na(MTR$len), list(MTR$sp, 50*floor(MTR$len/50), MTR$MTRid), sum)
-	barz[is.na(barz)] <- 0
-	barz <- barz[, , dimnames(barz)[[3]] %in% sut, drop=FALSE]
-	barz <- barz[apply(barz, 1, sum)>0, , , drop=FALSE]
-	sus <- dimnames(barz)[[1]]
-	if(!save.plots) windows(w=9, h=6.5)
-	par(mfrow=n2mfrow(length(sut)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
-	for(m in seq(along=sut)) {
-		barplot(barz[, , m], ylim=c(0, max(apply(barz, 2:3, sum))), col=1:50, 
-			names.arg=paste(dimnames(barz[, , 1])[[2]], "+", sep=""))
-		mtext(paste("id=", sut[m], "\nn=", sum(barz[, , m]), sep=""), side=3, line=-2.5, adj=0.98, font=2, cex=par("cex"))
-		box()
-		}
-	mtext("Length  (mm)", side=1, outer=TRUE)
-	mtext("Frequency", side=2, outer=TRUE)
-	mtext(paste(lkinfo$Lake[sel.lk], "- Midwater Trawl Catch"), side=3, outer=TRUE, font=2)
-	legend("topleft", sus, fill=seq(sus))
-	rm(barz, sus)
-	}
+  barz <- tapply(!is.na(MTR$len), list(MTR$sp, 50*floor(MTR$len/50), MTR$MTRid), sum)
+  barz[is.na(barz)] <- 0
+  barz <- barz[, , dimnames(barz)[[3]] %in% sut, drop=FALSE]
+  barz <- barz[apply(barz, 1, sum)>0, , , drop=FALSE]
+  sus <- dimnames(barz)[[1]]
+  if(!save.plots) windows(w=9, h=6.5)
+  par(mfrow=n2mfrow(length(sut)), oma=c(2, 2, 2, 0), mar=c(3, 3, 1, 1))
+  for(m in seq(along=sut)) {
+    barplot(barz[, , m], ylim=c(0, max(apply(barz, 2:3, sum))), col=1:50, 
+      names.arg=paste(dimnames(barz[, , 1])[[2]], "+", sep=""))
+    mtext(paste("id=", sut[m], "\nn=", sum(barz[, , m]), sep=""), side=3, line=-2.5, adj=0.98, font=2, cex=par("cex"))
+    box()
+    }
+  mtext("Length  (mm)", side=1, outer=TRUE)
+  mtext("Frequency", side=2, outer=TRUE)
+  mtext(paste(lkinfo$Lake[sel.lk], "- Midwater Trawl Catch"), side=3, outer=TRUE, font=2)
+  legend("topleft", sus, fill=seq(sus))
+  rm(barz, sus)
+  }
 
 detach(sampinfo.sub)
 
@@ -469,6 +469,6 @@ mean(table(MTR$MTRid))
 
 # remove all objects from current working directory
 rm(AC, ACsampinfo, ACsmryI, ACsmryIL, botdepr, catch.tots, d2shr.we, dfromx, eastr, first, fish, half.cone.rad, 
-	ints, ix, j, k, lkinfo, m, maxbotdep, mid.d, min.no.fish.per.haul, MTR, MTRbig, nofish, northr, nS, 
-	nS.orig, nT2, recode, sampinfo, sampinfo.sub, sampinput, save.plots, sel, sel.lk, sel.run, sel3, slopes, sua, dir, subdir, sub.mat, 
-	sut, sut2, temp, ts.scaled, tsr, xfromz, zfromx, wb, runrow)
+  ints, ix, j, k, lkinfo, m, maxbotdep, mid.d, min.no.fish.per.haul, MTR, MTRbig, nofish, northr, nS, 
+  nS.orig, nT2, recode, sampinfo, sampinfo.sub, sampinput, save.plots, sel, sel.lk, sel.run, sel3, slopes, sua, dir, subdir, sub.mat, 
+  sut, sut2, temp, ts.scaled, tsr, xfromz, zfromx, wb, runrow)
