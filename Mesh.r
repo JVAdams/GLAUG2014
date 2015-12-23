@@ -21,7 +21,7 @@ if(!require(MASS)) stop("R package MASS is required")
 if(!require(rpanel)) stop("R package rpanel is required")
 
 polar2cart <- function(r, theta, degrees=FALSE) {
-  # http://stackoverflow.com/questions/16351178/r-converting-cartesian-coordinates-to-polar-coordinates-and-then-calculating-d
+  # http://stackoverflow.com/a/16366109/2140956
   # convert degrees to radians (dividing by 360/2*pi, or multiplying by pi/180)
   if(degrees) {
     rads <- theta*pi/180
